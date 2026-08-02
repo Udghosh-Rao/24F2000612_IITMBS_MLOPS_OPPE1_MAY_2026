@@ -9,13 +9,14 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  id-token: write
 
 jobs:
-  test-and-report:
+  evaluate:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Python
@@ -26,12 +27,13 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Authenticate to Google Cloud
+      - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          workload_identity_provider: "projects/923576764337/locations/global/workloadIdentityPools/github-pool/providers/github-provider"
+          service_account: "github-mlops-ci@project-83abca74-808e-4448-be0.iam.gserviceaccount.com"
 
-      - name: Pull DVC versioned data
+      - name: Pull reproducible DVC data
         run: |
           dvc pull data/v0.dvc
           dvc pull ci_data/test.parquet.dvc
@@ -56,6 +58,7 @@ jobs:
           echo "" >> report.md
           echo "## Confusion Matrix" >> report.md
           cml publish reports/confusion_matrix.png --md >> report.md
+
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             cml comment create report.md
           else

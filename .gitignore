@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+
+feature_repo/data/*.parquet
+feature_repo/data/*.db
+models/
+reports/
+
+mlflow.db
+mlruns/
+
+ci_data/test.parquet
+
+.DS_Store
