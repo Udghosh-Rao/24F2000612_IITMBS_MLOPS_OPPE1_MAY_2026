@@ -36,6 +36,7 @@ jobs:
       - name: Pull reproducible DVC data
         run: |
           dvc pull data/v0.dvc
+          dvc pull feature_repo/data/iteration1.parquet.dvc
           dvc pull ci_data/test.parquet.dvc
           dvc pull mlflow.db.dvc
           dvc pull mlruns.dvc
