@@ -40,6 +40,7 @@ jobs:
           dvc pull ci_data/test.parquet.dvc
           dvc pull mlflow.db.dvc
           dvc pull mlruns.dvc
+          dvc pull models/best_iteration_2.joblib.dvc
 
       - name: Run feature sanity tests
         run: pytest -v tests/test_features.py

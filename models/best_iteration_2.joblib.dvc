@@ -1,0 +1,5 @@
+outs:
+- md5: e71b35d324c967cafc4d5d7cfdeaf6aa
+  size: 297799
+  hash: md5
+  path: best_iteration_2.joblib

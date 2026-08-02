@@ -4,7 +4,6 @@ __pycache__/
 
 feature_repo/data/*.parquet
 feature_repo/data/*.db
-models/
 reports/
 
 mlflow.db
@@ -13,3 +12,10 @@ mlruns/
 ci_data/test.parquet
 
 .DS_Store
+
+# Keep trained binaries out of Git, but allow DVC pointers
+
+# Trained model binaries are stored with DVC
+models/*
+!models/*.dvc
+!models/.gitignore
