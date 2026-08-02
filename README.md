@@ -121,3 +121,6 @@ Pipeline:
 ## Stack
 
 GCP, GCS, DVC, Feast, MLflow, scikit-learn, GitHub Actions, CML, pytest
+
+## CI Demonstration
+CML reporting is validated through the GitHub pull request workflow.
