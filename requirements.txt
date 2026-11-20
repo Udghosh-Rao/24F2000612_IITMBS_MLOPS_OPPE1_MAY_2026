@@ -1,6 +1,6 @@
 # Full MLOps pipeline (data versioning, feature store, tracking, CI evaluation).
 -r requirements-app.txt
 mlflow==3.15.0
-feast==0.65.0
+feast==0.68.0
 dvc[gs]==3.67.1
 matplotlib
