@@ -3,7 +3,7 @@
 # 📈 Stock Movement Predictor
 ### End-to-End MLOps Pipeline for Intraday Stock Price Direction Forecasting
 
-[![CI/CD](https://github.com/Udghosh-Rao/24F2000612_IITMBS_MLOPS_OPPE1_MAY_2026/actions/workflows/ci.yml/badge.svg)](https://github.com/Udghosh-Rao/24F2000612_IITMBS_MLOPS_OPPE1_MAY_2026/actions/workflows/ci.yml)
+[![CI/CD](https://github.com/Udghosh-Rao/stock-prediction-mlops-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/Udghosh-Rao/stock-prediction-mlops-pipeline/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![scikit-learn](https://img.shields.io/badge/scikit--learn-1.7-F7931E?logo=scikitlearn&logoColor=white)
 ![MLflow](https://img.shields.io/badge/MLflow-3.x-0194E2?logo=mlflow&logoColor=white)
@@ -111,8 +111,8 @@ direction is close to a random walk, so a ROC-AUC modestly above 0.5 is a realis
 ### 1. Run the demo locally (no cloud credentials needed)
 
 ```bash
-git clone https://github.com/Udghosh-Rao/24F2000612_IITMBS_MLOPS_OPPE1_MAY_2026.git
-cd 24F2000612_IITMBS_MLOPS_OPPE1_MAY_2026
+git clone https://github.com/Udghosh-Rao/stock-prediction-mlops-pipeline.git
+cd stock-prediction-mlops-pipeline
 pip install -r requirements-dev.txt
 streamlit run app.py
 ```
