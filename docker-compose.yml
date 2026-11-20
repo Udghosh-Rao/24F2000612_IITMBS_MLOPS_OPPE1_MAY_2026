@@ -1,0 +1,23 @@
+# Local stack: inference API + Streamlit demo + MLflow tracking UI
+#   docker compose up --build
+services:
+  api:
+    build: .
+    ports: ["8000:8000"]
+    volumes:
+      - ./models/best_iteration_2.joblib:/app/models/model.joblib:ro
+    restart: unless-stopped
+
+  demo:
+    build: .
+    command: ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+    ports: ["8501:8501"]
+
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: ["mlflow", "ui", "--backend-store-uri", "sqlite:////mlflow/mlflow.db", "--host", "0.0.0.0"]
+    ports: ["5000:5000"]
+    volumes:
+      - ./mlflow.db:/mlflow/mlflow.db
+      - ./mlruns:/mlruns
+    profiles: ["tracking"]

@@ -1,0 +1,6 @@
+-r requirements-app.txt
+pytest
+pytest-cov
+httpx
+ruff
+pre-commit

@@ -2,8 +2,7 @@ import os
 from datetime import timedelta
 
 from feast import Entity, FeatureView, Field, FileSource, ValueType
-from feast.types import Float64
-
+from feast.types import Float64, Int64
 
 DATA_FILE = os.environ.get(
     "FEAST_DATA_FILE",
@@ -29,6 +28,12 @@ stock_features = FeatureView(
     schema=[
         Field(name="rolling_avg_10", dtype=Float64),
         Field(name="volume_sum_10", dtype=Float64),
+        Field(name="ret_1", dtype=Float64),
+        Field(name="ret_5", dtype=Float64),
+        Field(name="price_vs_avg_10", dtype=Float64),
+        Field(name="volatility_10", dtype=Float64),
+        Field(name="volume_ratio_10", dtype=Float64),
+        Field(name="minute_of_day", dtype=Int64),
     ],
     source=stock_source,
 )

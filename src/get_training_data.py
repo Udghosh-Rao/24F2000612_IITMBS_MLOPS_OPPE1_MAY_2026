@@ -1,8 +1,11 @@
-from pathlib import Path
 import argparse
 import gc
+from pathlib import Path
+
 import pandas as pd
 from feast import FeatureStore
+
+from src.config import BASE_FEATURES, EXTRA_FEATURES
 
 
 def main(input_path, output_path, chunk_size=10000):
@@ -23,6 +26,13 @@ def main(input_path, output_path, chunk_size=10000):
     print("Stocks:", sorted(entity_df.stock_name.unique()))
 
     store = FeatureStore(repo_path="feature_repo")
+    available = set(df.columns)
+    feature_refs = [
+        f"stock_features:{name}"
+        for name in BASE_FEATURES + EXTRA_FEATURES
+        if name in available
+    ]
+    print("Features:", feature_refs)
 
     output_path = Path(output_path)
     parts_dir = output_path.parent / (output_path.stem + "_parts")
@@ -38,10 +48,7 @@ def main(input_path, output_path, chunk_size=10000):
 
         result = store.get_historical_features(
             entity_df=chunk,
-            features=[
-                "stock_features:rolling_avg_10",
-                "stock_features:volume_sum_10",
-            ],
+            features=feature_refs,
         ).to_df()
 
         part = parts_dir / f"part_{start:09d}.parquet"
@@ -67,7 +74,7 @@ def main(input_path, output_path, chunk_size=10000):
     print("SUCCESS:", output_path)
     print("Rows:", len(result))
     print("Stocks:", sorted(result.stock_name.unique()))
-    print(result[["rolling_avg_10", "volume_sum_10"]].isna().sum())
+    print(result.isna().sum())
 
 
 if __name__ == "__main__":

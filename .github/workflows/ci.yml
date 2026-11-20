@@ -10,9 +10,46 @@ permissions:
   contents: read
   pull-requests: write
   id-token: write
+  packages: write
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
+  quality:
+    name: Lint, unit tests & Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Unit & API tests with coverage
+        run: pytest -v --cov=src --cov-report=term-missing
+      - name: Build inference image
+        run: docker build -t ghcr.io/udghosh-rao/stock-movement-api:${{ github.sha }} .
+      - name: Smoke-test container
+        run: |
+          docker run -d -p 8000:8000 --name api ghcr.io/udghosh-rao/stock-movement-api:${{ github.sha }}
+          sleep 5 && curl -fsS localhost:8000/health && curl -fsS localhost:8000/metrics | head -5
+      - name: Publish image to GHCR
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          docker tag ghcr.io/udghosh-rao/stock-movement-api:${{ github.sha }} ghcr.io/udghosh-rao/stock-movement-api:latest
+          docker push ghcr.io/udghosh-rao/stock-movement-api:${{ github.sha }}
+          docker push ghcr.io/udghosh-rao/stock-movement-api:latest
+
   evaluate:
+    name: Evaluate registered model (DVC + MLflow + CML)
+    needs: quality
+    # OIDC auth to GCP is unavailable for PRs from forks.
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +60,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
 
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Authenticate to GCP
         uses: google-github-actions/auth@v2
@@ -43,10 +81,10 @@ jobs:
           dvc pull models/best_iteration_2.joblib.dvc
 
       - name: Run feature sanity tests
-        run: pytest -v tests/test_features.py
+        run: pytest -v
 
       - name: Fetch MLflow model and evaluate
-        run: python src/ci_evaluate.py
+        run: python -m src.ci_evaluate
 
       - name: Setup CML
         uses: iterative/setup-cml@v2

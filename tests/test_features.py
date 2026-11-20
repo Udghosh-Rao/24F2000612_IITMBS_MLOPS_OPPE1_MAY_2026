@@ -1,9 +1,18 @@
+"""Sanity tests against the real DVC-tracked data (skipped when data is not pulled)."""
+
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
-
+import pytest
 
 RAW = "data/v0/AARTIIND__EQ__NSE__NSE__MINUTE.csv"
 ENGINEERED = "feature_repo/data/iteration1.parquet"
+
+pytestmark = pytest.mark.skipif(
+    not (Path(RAW).exists() and Path(ENGINEERED).exists()),
+    reason="DVC data not pulled (run `dvc pull`)",
+)
 
 
 def load():

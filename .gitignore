@@ -19,3 +19,9 @@ ci_data/test.parquet
 models/*
 !models/*.dvc
 !models/.gitignore
+__pycache__/
+*.pyc
+.venv/
+reports/
+.pytest_cache/
+.ruff_cache/
