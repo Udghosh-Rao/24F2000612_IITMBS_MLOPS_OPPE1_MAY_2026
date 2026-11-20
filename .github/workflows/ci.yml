@@ -87,7 +87,7 @@ jobs:
         run: python -m src.ci_evaluate
 
       - name: Setup CML
-        uses: iterative/setup-cml@v2
+        uses: iterative/setup-cml@v3
 
       - name: Generate CML report
         env:
