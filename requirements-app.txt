@@ -1,6 +1,6 @@
 # Lightweight runtime for the API, Streamlit demo and unit tests (no Feast/MLflow/DVC).
 numpy==2.2.6
-pandas==2.3.3
+pandas==3.1.1
 pyarrow
 scikit-learn==1.7.2
 joblib
